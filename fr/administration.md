@@ -54,6 +54,62 @@ sudo systemctl restart peertube.service
 
 > Ne modifiez pas ce fichier pendant que PeerTube traite des uploads ou transcode des vidéos.
 
+## Récupération des mots de passe
+
+Tous les secrets sont générés sur la VM au premier boot — ils ne sont jamais stockés dans l'image.
+
+### Mot de passe administrateur PeerTube (`root`)
+
+Généré par PeerTube lui-même au premier démarrage. Récupérez-le depuis le journal système :
+
+```bash
+sudo journalctl -u peertube.service --no-pager | grep "User password"
+```
+
+Exemple de sortie :
+```
+Jun 22 08:00:01 ma-vm node[1234]: User password: AbCdEf123456
+```
+
+Ce mot de passe est utilisé pour se connecter à l'interface web en tant que `root`.
+
+### Mot de passe PostgreSQL
+
+Écrit dans le fichier de configuration de PeerTube :
+
+```bash
+sudo grep 'password' /var/www/peertube/versions/peertube/config/production.yaml
+```
+
+Vous pouvez également le lire directement depuis le champ `database.password` :
+
+```bash
+sudo python3 -c "import yaml; cfg=yaml.safe_load(open('/var/www/peertube/versions/peertube/config/production.yaml')); print(cfg['database']['password'])"
+```
+
+### Secret applicatif PeerTube
+
+Écrit dans le même fichier sous `secrets.peertube` :
+
+```bash
+sudo python3 -c "import yaml; cfg=yaml.safe_load(open('/var/www/peertube/versions/peertube/config/production.yaml')); print(cfg['secrets']['peertube'])"
+```
+
+### Si les mots de passe ont été fournis via Custom data
+
+Si vous avez renseigné `peertube_db_password` ou `peertube_secret` dans le champ **Custom data** lors de la création de la VM, ce sont ces valeurs qui ont été utilisées. Elles sont également consultables dans `production.yaml` comme indiqué ci-dessus.
+
+### Réinitialiser le mot de passe administrateur PeerTube
+
+Si vous avez perdu le mot de passe `root`, réinitialisez-le via la CLI PeerTube :
+
+```bash
+cd /var/www/peertube/versions/peertube
+sudo -u peertube NODE_CONFIG_DIR=/var/www/peertube/versions/peertube/config \
+  NODE_ENV=production node dist/server/tools/peertube-auth.js reset-password \
+  -u root -p NouveauMotDePasse
+```
+
 ## Utilisation du disque
 
 Le stockage vidéo se trouve sous :
