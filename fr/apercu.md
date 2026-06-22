@@ -33,11 +33,13 @@ L'image ne contient **pas** :
 ## Fonctionnement
 
 1. Déployez la VM depuis Azure Marketplace.
-2. Connectez-vous via SSH.
-3. Exécutez le script de finalisation — il configure le domaine, la base de données, le TLS et démarre PeerTube.
-4. Ouvrez `https://<votre-domaine-ou-ip>` dans un navigateur.
+2. La VM se configure entièrement seule au premier boot (3 à 8 minutes).
+3. Connectez-vous en SSH pour récupérer le mot de passe administrateur.
+4. Ouvrez `https://<ip-publique-ou-domaine>` dans un navigateur.
 
-Consultez [Finalisation de PeerTube](finalisation.md) pour la procédure complète.
+Vous pouvez optionnellement personnaliser le hostname, l'email et les mots de passe dans le champ **Custom data** (onglet Avancé) lors de la création de la VM.
+
+Consultez [Finalisation de PeerTube](finalisation.md) pour les détails.
 
 ## Public cible
 

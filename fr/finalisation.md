@@ -1,42 +1,47 @@
 # Finalisation de l'instance PeerTube
 
-Après vous être connecté à la VM, exécutez le script de finalisation pour transformer l'image déployée en une instance PeerTube fonctionnelle.
+**Aucune intervention n'est requise.** La VM se configure entièrement toute seule au premier démarrage.
 
-## Ce que fait la finalisation
+## Ce qui se passe automatiquement
 
-Le script de finalisation s'exécute une seule fois sur la VM et effectue ces étapes :
+Au premier boot, le service systemd `peertube-firstboot.service` s'exécute automatiquement et effectue ces étapes :
 
-1. Génère le fichier de configuration PeerTube (`production.yaml`) avec votre nom d'hôte, un mot de passe de base de données aléatoire et un secret applicatif aléatoire.
-2. Crée la base de données PostgreSQL et le rôle pour PeerTube.
-3. Génère un certificat TLS pour HTTPS (auto-signé, ou Let's Encrypt si un nom de domaine est fourni).
-4. Configure et active le reverse proxy nginx.
-5. Installe et démarre `peertube.service`.
-6. Attend que l'application réponde sur le port 443.
+1. Détermine le nom d'hôte public de la VM (via Azure IMDS ou le champ Custom data).
+2. Génère un mot de passe PostgreSQL et un secret applicatif aléatoires (sauf si fournis dans Custom data).
+3. Génère le fichier de configuration PeerTube (`production.yaml`).
+4. Crée la base de données PostgreSQL et le rôle pour PeerTube.
+5. Génère un certificat TLS auto-signé pour HTTPS.
+6. Configure et active le reverse proxy nginx.
+7. Installe et démarre `peertube.service`.
+8. Attend que l'application réponde sur le port 443.
 
-Tous les identifiants (mot de passe de base de données, secret applicatif) sont générés sur la VM à l'exécution — ils ne sont jamais stockés dans l'image.
+Tous les identifiants sont générés sur la VM à l'exécution — ils ne sont jamais stockés dans l'image.
 
-## Exécuter le script de finalisation
+La finalisation prend environ **3 à 8 minutes** après le démarrage de la VM.
 
-Une fois connecté via SSH :
+## Personnaliser le déploiement (optionnel)
 
-```bash
-sudo /var/www/peertube/scripts/finalize-peertube-vm.sh
+Lors de la création de la VM, l'onglet **Avancé** du portail Azure propose un champ **Custom data**. Vous pouvez y saisir des paramètres au format `clé=valeur` pour surcharger les valeurs par défaut :
+
+```
+peertube_hostname=peertube.example.com
+peertube_admin_email=admin@example.com
+peertube_db_password=MonMotDePasseDB
+peertube_secret=MonSecretApplicatif64chars
 ```
 
-> Le script est idempotent : s'il a déjà été exécuté, il ignorera les étapes déjà complétées, sauf si vous forcez une nouvelle exécution.
+| Clé | Description | Défaut si absent |
+|-----|-------------|-----------------|
+| `peertube_hostname` | Nom de domaine ou IP publique pour accéder à PeerTube | IP publique détectée via Azure IMDS |
+| `peertube_admin_email` | Email du super-administrateur PeerTube | `admin@<hostname>` |
+| `peertube_db_password` | Mot de passe PostgreSQL | Généré aléatoirement (`openssl rand`) |
+| `peertube_secret` | Secret applicatif PeerTube | Généré aléatoirement (`openssl rand`) |
 
-Il vous sera demandé de fournir (ou de confirmer) :
-
-- **Nom d'hôte** : le nom de domaine ou l'adresse IP publique que les utilisateurs utiliseront pour accéder à PeerTube.
-- **Email administrateur** : utilisé comme adresse email du super-administrateur PeerTube.
-
-## Attendre le démarrage
-
-Le script attend que PeerTube soit accessible. Cela prend environ **60 à 120 secondes** lors du premier démarrage, car PeerTube initialise son schéma de base de données et crée le compte administrateur.
+> Tous ces paramètres sont **optionnels**. Si le champ Custom data est vide, la VM se configure automatiquement avec des valeurs sécurisées générées à la volée.
 
 ## Récupérer le mot de passe administrateur
 
-Le mot de passe administrateur initial est généré automatiquement. Après le démarrage, récupérez-le depuis le journal système :
+Le mot de passe du compte `root` PeerTube est généré par PeerTube lui-même au premier démarrage. Connectez-vous en SSH à la VM et récupérez-le depuis le journal système :
 
 ```bash
 sudo journalctl -u peertube.service --no-pager | grep "User password"
@@ -51,10 +56,10 @@ Conservez ce mot de passe — vous l'utiliserez pour vous connecter à l'interfa
 
 ## Vérifier l'instance
 
-Ouvrez un navigateur et accédez à `https://<votre-nom-dhôte>`.
+Ouvrez un navigateur et accédez à `https://<ip-publique-ou-domaine>`.
 
-- Si vous avez utilisé une IP publique ou un certificat auto-signé, votre navigateur affichera un avertissement de sécurité. C'est attendu — poursuivez vers le site.
-- Si vous avez configuré un nom de domaine avec Let's Encrypt, le certificat sera valide.
+- Avec une IP publique ou un certificat auto-signé, votre navigateur affichera un avertissement de sécurité. C'est attendu — cliquez sur « Avancé » et poursuivez.
+- Avec un nom de domaine et Let's Encrypt configuré, le certificat sera valide.
 
 Vérifiez que vous pouvez :
 
@@ -62,11 +67,20 @@ Vérifiez que vous pouvez :
 2. Vous connecter en tant que `root` avec le mot de passe récupéré ci-dessus.
 3. Naviguer vers **Administration > Vue d'ensemble** pour confirmer que le serveur fonctionne.
 
+## Suivre la progression (optionnel)
+
+Pour consulter les journaux de la finalisation en temps réel :
+
+```bash
+sudo journalctl -u peertube-firstboot.service -f
+```
+
 ## Dépannage
 
 | Problème | Cause | Solution |
 |----------|-------|----------|
-| Le script se termine avec une erreur | Dépendance manquante | Vérifiez la sortie — le script indique le composant manquant |
-| La page d'accueil PeerTube ne se charge pas après 3 minutes | Problème de démarrage du service | Exécutez `sudo systemctl status peertube.service` et consultez les logs avec `sudo journalctl -u peertube.service -n 50` |
-| Erreur de certificat dans le navigateur | Certificat auto-signé | C'est attendu — cliquez sur « Avancé » et continuez, ou configurez un domaine valide avec Let's Encrypt |
+| PeerTube non accessible 10 minutes après le démarrage | Échec du firstboot | Consultez `sudo journalctl -u peertube-firstboot.service -n 50` |
+| PeerTube configuré avec une IP privée (ex. `10.x.x.x`) | IMDS n'a pas retourné l'IP publique | Connectez-vous en SSH et relancez manuellement : `sudo PEERTUBE_HOSTNAME=<ip-publique> PEERTUBE_FORCE=1 /usr/local/sbin/finalize-peertube-vm.sh` |
+| La page d'accueil ne se charge pas | Problème de démarrage du service | `sudo systemctl status peertube.service` et `sudo journalctl -u peertube.service -n 50` |
+| Erreur de certificat dans le navigateur | Certificat auto-signé | Attendu — cliquez sur « Avancé » et continuez, ou configurez un domaine avec Let's Encrypt |
 | Impossible de récupérer le mot de passe admin | Logs pas encore écrits | Attendez 30 secondes et relancez la commande `journalctl` |

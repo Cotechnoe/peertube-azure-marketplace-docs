@@ -10,10 +10,10 @@ Before deploying the PeerTube VM from Azure Marketplace, ensure the following re
 
 ## Networking requirements
 
-- **Port 22 (SSH)** must be accessible from your workstation to complete the finalization step.
 - **Port 80 (HTTP)** and **Port 443 (HTTPS)** must be accessible from the internet for PeerTube to be reachable by users and for TLS certificate issuance (if using Let's Encrypt).
+- **Port 22 (SSH)** is recommended for accessing logs and retrieving the administrator password, but is not required for finalization (which is automatic).
 
-> The Azure Marketplace deployment creates a Network Security Group (NSG) with these ports open by default. You may restrict port 22 to your IP after finalization.
+> The Azure Marketplace deployment creates a Network Security Group (NSG) with these ports open by default. You may restrict port 22 to your IP after initial setup.
 
 ## DNS (recommended)
 
@@ -24,12 +24,13 @@ A **publicly resolvable domain name** pointing to the VM's public IP is strongly
 
 Azure Public IP DNS labels (`<label>.eastus.cloudapp.azure.com`) are supported and sufficient for testing.
 
-## SSH key
+## SSH key (recommended)
 
-- An **SSH key pair** is required at VM creation time (Azure injects the public key).
-- You must have the corresponding private key available locally to connect after deployment.
+- An **SSH key pair** is recommended so you can access logs and retrieve the administrator password after deployment.
+- Without an SSH key, the PeerTube administrator password will be inaccessible.
 
 ## Knowledge prerequisites
 
-- Basic Linux command-line usage (connecting via SSH, running commands as `sudo`).
-- No prior PeerTube knowledge is required to complete the deployment.
+- No commands to run for deployment: the VM configures itself automatically.
+- Basic SSH usage is helpful for retrieving the administrator password.
+- No prior PeerTube knowledge is required.

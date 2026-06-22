@@ -10,10 +10,10 @@ Avant de déployer la VM PeerTube depuis Azure Marketplace, assurez-vous que les
 
 ## Exigences réseau
 
-- **Port 22 (SSH)** doit être accessible depuis votre poste de travail pour effectuer l'étape de finalisation.
 - **Port 80 (HTTP)** et **port 443 (HTTPS)** doivent être accessibles depuis Internet pour que PeerTube soit joignable par les utilisateurs et pour l'émission du certificat TLS (si vous utilisez Let's Encrypt).
+- **Port 22 (SSH)** est recommandé pour accéder aux journaux et récupérer le mot de passe administrateur, mais n'est pas requis pour la finalisation (celle-ci est automatique).
 
-> Le déploiement Azure Marketplace crée un groupe de sécurité réseau (NSG) avec ces ports ouverts par défaut. Vous pouvez restreindre le port 22 à votre IP après la finalisation.
+> Le déploiement Azure Marketplace crée un groupe de sécurité réseau (NSG) avec ces ports ouverts par défaut. Vous pouvez restreindre le port 22 à votre IP après la configuration initiale.
 
 ## DNS (recommandé)
 
@@ -24,12 +24,13 @@ Un **nom de domaine publiquement résolvable** pointant vers l'IP publique de la
 
 Les labels DNS Azure Public IP (`<label>.eastus.cloudapp.azure.com`) sont supportés et suffisants pour les tests.
 
-## Clé SSH
+## Clé SSH (recommandée)
 
-- Une **paire de clés SSH** est requise au moment de la création de la VM (Azure injecte la clé publique).
-- Vous devez disposer de la clé privée correspondante en local pour vous connecter après le déploiement.
+- Une **paire de clés SSH** est recommandée pour accéder aux journaux et récupérer le mot de passe administrateur après le déploiement.
+- Si vous ne fournissez pas de clé SSH, le mot de passe administrateur PeerTube sera inaccessible.
 
 ## Prérequis en termes de compétences
 
-- Utilisation basique de la ligne de commande Linux (connexion SSH, exécution de commandes en `sudo`).
-- Aucune connaissance préalable de PeerTube n'est requise pour réaliser le déploiement.
+- Aucune commande à exécuter pour déployer : la VM se configure seule.
+- Une utilisation basique de SSH est utile pour récupérer le mot de passe administrateur.
+- Aucune connaissance préalable de PeerTube n'est requise.

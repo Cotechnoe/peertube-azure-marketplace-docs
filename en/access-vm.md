@@ -1,6 +1,6 @@
 # Access the VM
 
-After the VM is deployed from Azure Marketplace, connect to it via SSH to complete the finalization.
+After the VM is deployed from Azure Marketplace, finalization runs automatically. SSH access is useful for monitoring progress and retrieving the administrator password.
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ systemctl list-units --type=service | grep -E "nginx|postgresql|redis"
 # nginx.service, postgresql.service, redis-server.service should be listed
 ```
 
-> At this stage, `peertube.service` is **not yet running** — this is expected. PeerTube requires finalization before it can start. See [Finalize PeerTube](finalize.md).
+> `peertube-firstboot.service` is running automatically in the background. Finalization takes 3 to 8 minutes. See [Finalize PeerTube](finalize.md) to monitor progress.
 
 ## Troubleshooting
 
