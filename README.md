@@ -26,6 +26,21 @@ This repository contains the public user documentation for the **PeerTube VM off
 - **Base OS**: Ubuntu 22.04 LTS (Gen2)
 - **Azure region**: East US (and others depending on availability)
 
+## Software stack
+
+Versions installed in the VM image:
+
+| Component | Version | Notes |
+|-----------|---------|-------|
+| **PeerTube** | **8.2.0** | Built from source |
+| Node.js | 24.x LTS | Via NodeSource repository |
+| pnpm | 10.x | Package manager for PeerTube |
+| PostgreSQL | 14.x | Ubuntu 22.04 package |
+| Redis | 8.8.0 | Via official Redis repository (packages.redis.io) |
+| nginx | 1.18.x | Ubuntu 22.04 package |
+| ffmpeg | 7.0.2 | Static build from [johnvansickle.com](https://johnvansickle.com/ffmpeg/) |
+| certbot | 1.21.0 | Let's Encrypt TLS automation |
+
 ## License
 
 Documentation content is licensed under [CC BY 4.0](LICENSE).
