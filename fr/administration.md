@@ -172,3 +172,36 @@ Le groupe de sécurité réseau Azure (NSG) contrôle le trafic entrant. Règles
 | 443 | TCP | HTTPS (PeerTube) | Ouvert |
 
 Ajustez les règles NSG dans le portail Azure sous **Réseau** sur la page de votre VM.
+
+## Liens utiles
+
+### Documentation PeerTube
+
+| Sujet | URL |
+|-------|-----|
+| Configuration via l'interface web | [docs.joinpeertube.org/admin/configuration](https://docs.joinpeertube.org/admin/configuration) |
+| Configuration système (`production.yaml`) | [docs.joinpeertube.org/maintain/configuration](https://docs.joinpeertube.org/maintain/configuration) |
+| Gestion des utilisateurs et authentification | [docs.joinpeertube.org/admin/managing-users](https://docs.joinpeertube.org/admin/managing-users) |
+| Modération de l'instance | [docs.joinpeertube.org/admin/moderation](https://docs.joinpeertube.org/admin/moderation) |
+| Journaux PeerTube | [docs.joinpeertube.org/admin/logs](https://docs.joinpeertube.org/admin/logs) |
+| Outils CLI serveur | [docs.joinpeertube.org/maintain/tools](https://docs.joinpeertube.org/maintain/tools) |
+| Mise à jour de PeerTube | [docs.joinpeertube.org/maintain/upgrade](https://docs.joinpeertube.org/maintain/upgrade) |
+| Stockage distant S3 | [docs.joinpeertube.org/maintain/remote-storage](https://docs.joinpeertube.org/maintain/remote-storage) |
+| Migration d'instance | [docs.joinpeertube.org/maintain/migration](https://docs.joinpeertube.org/maintain/migration) |
+| Surveillance / Observabilité | [docs.joinpeertube.org/maintain/observability](https://docs.joinpeertube.org/maintain/observability) |
+| Fédération et redondance | [docs.joinpeertube.org/admin/following-instances](https://docs.joinpeertube.org/admin/following-instances) |
+| Personnaliser l'instance | [docs.joinpeertube.org/admin/customize-instance](https://docs.joinpeertube.org/admin/customize-instance) |
+| Guide de confidentialité | [docs.joinpeertube.org/admin/privacy-guide](https://docs.joinpeertube.org/admin/privacy-guide) |
+
+### Documentation Azure VM
+
+| Sujet | URL |
+|-------|-----|
+| Vue d'ensemble des VMs Linux Azure | [learn.microsoft.com — Vue d'ensemble des VMs Linux](https://learn.microsoft.com/fr-fr/azure/virtual-machines/linux/overview) |
+| Gérer les groupes de sécurité réseau (NSG) | [learn.microsoft.com — Groupes de sécurité réseau](https://learn.microsoft.com/fr-fr/azure/virtual-network/manage-network-security-group) |
+| Attacher un disque de données à une VM Linux | [learn.microsoft.com — Attacher un disque de données](https://learn.microsoft.com/fr-fr/azure/virtual-machines/linux/attach-disk-portal) |
+| Surveiller une VM Azure avec Azure Monitor | [learn.microsoft.com — Surveiller les VMs avec Azure Monitor](https://learn.microsoft.com/fr-fr/azure/virtual-machines/monitor-vm) |
+| Sauvegarder une VM Azure avec Azure Backup | [learn.microsoft.com — Azure Backup pour VMs](https://learn.microsoft.com/fr-fr/azure/backup/backup-azure-vms-introduction) |
+| Options de disponibilité des VMs Azure | [learn.microsoft.com — Disponibilité des VMs](https://learn.microsoft.com/fr-fr/azure/virtual-machines/availability) |
+| Redimensionner une VM Azure | [learn.microsoft.com — Redimensionner une VM](https://learn.microsoft.com/fr-fr/azure/virtual-machines/resize-vm) |
+| Custom data et cloud-init sur Azure | [learn.microsoft.com — Custom data et cloud-init](https://learn.microsoft.com/fr-fr/azure/virtual-machines/custom-data) |
