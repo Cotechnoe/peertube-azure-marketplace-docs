@@ -15,15 +15,17 @@
 
 L'image Azure Marketplace contient un environnement pré-installé et pré-configuré :
 
-| Composant | Version |
-|-----------|---------|
-| Ubuntu Server | 22.04 LTS (Gen2) |
-| PeerTube | Dernière version stable à la date de build |
-| Node.js | ≥ 18 LTS |
-| PostgreSQL | Ubuntu 22.04 LTS (défaut) |
-| Redis | Ubuntu 22.04 LTS (défaut) |
-| nginx | Dernière version stable |
-| ffmpeg | Paquet Ubuntu 22.04 |
+| Composant | Version | Notes |
+|-----------|---------|-------|
+| Ubuntu Server | 22.04 LTS (Gen2) | |
+| **PeerTube** | **8.2.0** | Compilé depuis les sources |
+| Node.js | 24.x LTS | Dépôt NodeSource |
+| pnpm | 10.x | Gestionnaire de paquets PeerTube |
+| PostgreSQL | 14.x | Paquet Ubuntu 22.04 |
+| Redis | 8.8.0 | Dépôt officiel packages.redis.io |
+| nginx | 1.18.x | Paquet Ubuntu 22.04 |
+| ffmpeg | 7.0.2 | Build statique johnvansickle.com |
+| certbot | 1.21.0 | Renouvellement TLS automatique |
 
 L'image ne contient **pas** :
 
